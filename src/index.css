@@ -3,17 +3,33 @@
 @theme {
   --color-strength-medium: #ff00f6;
   --color-strength-strong: #8b5cf6;
+  --color-black: #333333;
+  --color-white: #d1d5dc;
+  --font-family: "Inter", "A P-OTF A1Gothic StdN", "Zen Kaku Gothic New","Yu Gothic", sans-serif;
 }
 
-@layer base {
-  body {
-    @apply antialiased bg-white text-gray-800 text-base;
-    font-family: "Inter", "A P-OTF A1Gothic StdN M";
-  }
+body {
+  font-family: var(--font-family);
+  color: var(--color-black);
 }
 
 @layer components {
   .card {
     @apply p-8 rounded-4xl bg-white/5 bg-linear-to-tr from-white/20 via-white/10 to-white/5 backdrop-blur-md border border-white/30 shadow-[0_12px_48px_0_rgba(0,0,0,0.12)] ring-1 ring-inset ring-white/25;
+  }
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
