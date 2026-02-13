@@ -6,7 +6,7 @@ function Header() {
         <header className="fixed flex top-4 z-50 w-[90%] items-center justify-between">
             
             {/* logo */}
-            <div className="relative w-24 h-16">
+            <div className="relative w-24 h-16 drop-shadow-lg/15">
                 <Link to="/">
                     <div className="absolute"></div>
                     <img src={logoImage} alt="ReLa" className="relative w-full h-full" />
@@ -14,7 +14,7 @@ function Header() {
             </div>
 
             {/* menu */}
-            <nav className="flex gap-6 font-bold text-black">
+            <nav className="flex gap-6 font-bold text-black drop-shadow-lg/15">
                 <NavLink 
                     to="/" 
                     end
@@ -22,7 +22,7 @@ function Header() {
                 >
                     {({ isActive }) => (
                         <>
-                            <span>Collection</span>
+                            <span className='text-sm lg:text-base'>Collection</span>
                             <span 
                                 className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                                     isActive 
@@ -40,7 +40,7 @@ function Header() {
                 >
                     {({ isActive }) => (
                         <>
-                            <span>About</span>
+                            <span className='text-sm lg:text-base'>About</span>
                             <span
                                 className={`absolute bottom-0 left-0 h-0.5 transition-all duration-300 ${
                                     isActive
