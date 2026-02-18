@@ -5,5 +5,4 @@ export interface Bookmark {
   tags: string[];
   memo: string;
   savedAt: Date;
-  personalityScore: number;
 }

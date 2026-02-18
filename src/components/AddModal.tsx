@@ -5,36 +5,39 @@ interface AddModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (bookmark: Bookmark) => void;
+  editingBookmark?: Bookmark | null;
 }
 
-function AddModal({ isOpen, onClose, onSave }: AddModalProps) {
-  const [url, setUrl] = useState('');
-  const [title, setTitle] = useState('');
-  const [showDetails, setShowDetails] = useState(false);
-  const [tags, setTags] = useState('');
-  const [memo, setMemo] = useState('');
+function AddModal({ isOpen, onClose, onSave, editingBookmark}: AddModalProps) {
+  const [url, setUrl] = useState(editingBookmark?.url ?? '');
+  const [title, setTitle] = useState(editingBookmark?.title ?? '');
+  const [showDetails, setShowDetails] = useState(
+    !!(editingBookmark?.tags.length || editingBookmark?.memo)
+  );
+  const [tags, setTags] = useState(editingBookmark?.tags.join(', ') ?? '');
+  const [memo, setMemo] = useState(editingBookmark?.memo ?? '');
 
   const handleSave = () => {
-    const newBookmark = {
-      id: crypto.randomUUID(),
-      url: url,
-      title: title,
-      tags: tags.split(',').map(tag => tag.trim()),
-      memo: memo,
-      savedAt: new Date(),
-      personalityScore: 0
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      alert('URLはhttp://またはhttps://で始まる必要があります');
+      return;
+    }
+    const savedBookmark: Bookmark = {
+      id: editingBookmark?.id ?? crypto.randomUUID(),
+      //  ↑ 編集時は既存ID、新規時は新しいID
+      url,
+      title,
+      tags: tags.split(',').map(tag => tag.trim()).filter(tag => tag !== ''),
+      memo,
+      savedAt: editingBookmark?.savedAt ?? new Date(),
+      //       ↑ 編集時は既存日時、新規時は現在時刻
     };
-    
-    onSave(newBookmark);
-    
-    // 入力欄をリセット
-    setUrl('');
-    setTitle('');
-    setTags('');
-    setMemo('');
-    setShowDetails(false);
-  };
 
+    onSave(savedBookmark);
+
+    // リセットはkeyプロパティが担当するので不要!
+  };
+  
   if (!isOpen) return null;  // モーダルが閉じているときは何も表示しない
 
   return (

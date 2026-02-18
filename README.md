@@ -1,73 +1,436 @@
-# React + TypeScript + Vite
+# 個性ビジュアル生成規則 詳細解説
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 概要
 
-Currently, two official plugins are available:
+URLから生成された32バイトのハッシュ値を使用して、7種類の異なる視覚パターンを生成します。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## バイト配列の役割
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| インデックス | パラメータ名 | 用途 | 範囲 |
+|------------|------------|------|------|
+| 0 | hue | 色相 | 0〜360° |
+| 1 | saturation | 彩度 | 45〜75% |
+| 2 | lightness | 明度 | 55〜70% |
+| 3 | schemeType | 配色スキーム | 0〜3 |
+| 4 | bgDark | 背景明暗 | boolean |
+| 5 | ruleType | 生成ルール選択 | 0〜6 |
+| 6 | rotations | 放射回転数 | 3〜7 |
+| 7 | twist | ねじれ角度 | 0〜25° |
+| 8 | layers | レイヤー数 | 2〜4 |
+| 9 | blobPoints | ブロブ頂点数 | 4〜7 |
+| 10 | blobWobble | ブロブうねり | 0.3〜0.7 |
+| 11 | blobLayers | ブロブ層数 | 2〜4 |
+| 12 | petalCount | 花びら枚数 | 4〜8 |
+| 13 | petalWidth | 花びら太さ | 0.3〜0.7 |
+| 14 | petalLayers | 花レイヤー | 1〜2 |
+| 15 | bubbleCount | 泡の数 | 5〜10 |
+| 16 | bubbleSize | 泡サイズ | 15〜40px |
+| 17 | starPoints | 星の角数 | 4〜7 |
+| 18 | innerRatio | 星内半径比 | 0.3〜0.7 |
+| 19 | crystalLayers | 結晶層数 | 2〜4 |
+| 20 | gridSize | グリッドサイズ | 3〜5 |
+| 21 | tileVariant | タイル種類 | 0〜2 |
+| 22 | sides | 多角形辺数 | 3〜6 |
+| 23 | depth | 再帰深度 | 2〜4 |
+| 24 | opacity | 不透明度 | 0.55〜0.90 |
+| 25 | strokeW | 線の太さ | 0.4〜1.6 |
+| 26 | fillMix | 塗り混合 | boolean |
+| 27-31 | (未使用) | 将来の拡張用 | - |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 配色スキーム
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 0: 補色(Complementary)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+色相環で180°反対の色を組み合わせます。
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+色1: hue + 0°
+色2: hue + 180°
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**特徴:** コントラストが強い、ダイナミック
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+**例:**
+- 赤(0°) ↔ シアン(180°)
+- 青(240°) ↔ 黄(60°)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+### 1: トライアド(Triadic)
+
+色相環を3等分した3色を使用します。
+
 ```
+色1: hue + 0°
+色2: hue + 120°
+色3: hue + 240°
+```
+
+**特徴:** バランスが良い、カラフル
+
+**例:**
+- 赤(0°) + 緑(120°) + 青(240°)
+
+---
+
+### 2: 類似色(Analogous)
+
+色相環で隣接する3色を使用します。
+
+```
+色1: hue + 0°
+色2: hue + 30°
+色3: hue + 60°
+```
+
+**特徴:** 調和的、柔らかい
+
+**例:**
+- 赤(0°) + オレンジ(30°) + 黄(60°)
+
+---
+
+### 3: 単色グラデーション(Monochrome)
+
+同じ色相で微妙に変化させます。
+
+```
+色1: hue + 0°
+色2: hue + 15°
+色3: hue + 30°
+色4: hue + 45°
+```
+
+**特徴:** 統一感、洗練
+
+---
+
+## 生成ルール
+
+### ルール0: 放射対称(Radial)
+
+**概要:** 中心から放射状に広がる水滴形パターン
+
+**使用パラメータ:**
+- `rotations`: 放射線の本数(3〜7本)
+- `twist`: 層ごとの回転角度(0〜25°)
+- `layers`: 重ねる層の数(2〜4層)
+- `fillMix`: 一部の層を塗りつぶしなしに
+
+**アルゴリズム:**
+
+```
+for 各層(0〜layers):
+  縮小率 = 1 - 層番号 * 0.22
+  for 各回転(0〜rotations):
+    角度 = i * (360 / rotations) + twist * 層番号
+    水滴形パスを生成:
+      M 100 100 (中心)
+      Q 制御点1 頂点 (ベジェ曲線で丸み)
+      Q 制御点2 中心 (戻る)
+      Z (閉じる)
+    回転変換を適用
+```
+
+**視覚的特徴:**
+- 花火、太陽光線のような放射パターン
+- 層が重なることで奥行き感
+- ねじれることで動きを表現
+
+---
+
+### ルール1: ブロブ(Blob)
+
+**概要:** 有機的な不規則な形を重ねる
+
+**使用パラメータ:**
+- `blobPoints`: 頂点数(4〜7)
+- `blobWobble`: うねりの強さ(0.3〜0.7)
+- `blobLayers`: 層の数(2〜4)
+
+**アルゴリズム:**
+
+```
+for 各層(0〜blobLayers):
+  縮小率 = 1 - 層番号 * 0.2
+  角度オフセット = 層番号 * 0.4
+  
+  円周上に頂点を配置:
+    for i = 0 to blobPoints:
+      角度 = (i / blobPoints) * 2π + 角度オフセット
+      半径 = 基本半径 * (1 + sin(角度 * 2.5 + i) * wobble * 0.5)
+      座標 = (cx + 半径 * cos(角度), cy + 半径 * sin(角度))
+  
+  隣接頂点間を二次ベジェ曲線で接続:
+    Q 頂点座標 中点座標
+```
+
+**視覚的特徴:**
+- アメーバ、細胞のような有機的な形
+- `wobble`が大きいほど不規則
+- 層の角度オフセットで複雑な重なり
+
+**数学的補足:**
+- `sin(角度 * 2.5 + i)`で決定論的な「ランダム性」を実現
+- 二次ベジェ曲線(Q)で滑らかな曲線を生成
+
+---
+
+### ルール2: 花(Flower)
+
+**概要:** 楕円形の花びらを円形に配置
+
+**使用パラメータ:**
+- `petalCount`: 花びらの枚数(4〜8)
+- `petalWidth`: 花びらの太さ(0.3〜0.7)
+- `petalLayers`: 層の数(1〜2)
+
+**アルゴリズム:**
+
+```
+for 各層(0〜petalLayers+1):
+  半径 = 70 * (1 - 層番号 * 0.3)
+  回転オフセット = 層番号 * (180 / petalCount)
+  
+  for 各花びら(0〜petalCount):
+    角度 = (i / petalCount) * 2π + 回転オフセット
+    中心位置 = (
+      100 + 半径 * 0.5 * cos(角度),
+      100 + 半径 * 0.5 * sin(角度)
+    )
+    楕円サイズ = (
+      rx: 半径 * petalWidth,
+      ry: 半径 * 0.45
+    )
+    回転 = 角度 * 180/π + 90°
+    
+    楕円を描画
+
+中心に小さな円を描画(花の中心部)
+```
+
+**視覚的特徴:**
+- 桜、ヒマワリのような花パターン
+- 層をずらすことで立体感
+- `petalWidth`で花びらの太さを調整
+
+---
+
+### ルール3: 泡(Bubble)
+
+**概要:** 大小の円を散りばめる
+
+**使用パラメータ:**
+- `bubbleCount`: 泡の数(5〜10)
+- `bubbleSize`: 基本サイズ(15〜40px)
+
+**アルゴリズム:**
+
+```
+for 各泡(0〜bubbleCount):
+  角度 = (i / bubbleCount) * 2π
+  距離 = (i % 2 == 0) ? 45 : 65  // 内側と外側で交互
+  中心 = (100 + 距離 * cos(角度), 100 + 距離 * sin(角度))
+  半径 = bubbleSize * (0.6 + (i % 3) * 0.25)  // サイズ変化
+  
+  円を描画
+
+中央に大きな泡を配置
+```
+
+**視覚的特徴:**
+- シャボン玉、細胞集合のような配置
+- インデックスベースでサイズを決定論的に変化
+- 内側・外側の交互配置で動きを表現
+
+---
+
+### ルール4: 星・結晶(Star)
+
+**概要:** 多角形の星を重ねる
+
+**使用パラメータ:**
+- `starPoints`: 角の数(4〜7)
+- `innerRatio`: 内側頂点の半径比(0.3〜0.7)
+- `crystalLayers`: 層の数(2〜4)
+- `twist`: 層ごとの回転(0〜25°)
+
+**アルゴリズム:**
+
+```
+for 各層(0〜crystalLayers):
+  縮小率 = 1 - 層番号 * 0.2
+  外半径 = 80 * 縮小率
+  内半径 = 外半径 * innerRatio
+  回転 = 層番号 * (twist * π/180)
+  
+  頂点配列を生成:
+    for i = 0 to starPoints*2:
+      角度 = (i / (starPoints*2)) * 2π + 回転 - π/2
+      半径 = (i % 2 == 0) ? 外半径 : 内半径
+      頂点 = (cx + 半径 * cos(角度), cy + 半径 * sin(角度))
+  
+  多角形として描画
+```
+
+**視覚的特徴:**
+- 雪の結晶、星型パターン
+- `innerRatio`が小さいほど尖った星
+- 層を回転させることで複雑な結晶形状
+
+**数学的補足:**
+- 外側頂点と内側頂点を交互に配置(i % 2)
+- `-π/2`で頂点が上を向くように調整
+
+---
+
+### ルール5: タイリング(Tile)
+
+**概要:** グリッド状にパターンを敷き詰める
+
+**使用パラメータ:**
+- `gridSize`: グリッドサイズ(3x3〜5x5)
+- `tileVariant`: タイル種類(0:弧、1:円、2:四角)
+
+**アルゴリズム:**
+
+```
+セルサイズ = 200 / gridSize
+
+for 各行(0〜gridSize):
+  for 各列(0〜gridSize):
+    セル位置 = (列 * セルサイズ, 行 * セルサイズ)
+    セル中心 = (位置 + セルサイズ/2, 位置 + セルサイズ/2)
+    色 = palette[(行 + 列) % パレット長]
+    
+    variant 0 (弧):
+      二次ベジェ曲線で丸い弧を描画
+      パターンは(行*gridSize + 列) % 4で決定
+    
+    variant 1 (円):
+      円を描画、サイズは位置で変化
+    
+    variant 2 (角丸四角):
+      角丸矩形を描画
+```
+
+**視覚的特徴:**
+- モザイク、タイルパターン
+- 行列の和で色を決定 → チェッカーボード風
+- 3種類のバリエーション
+
+---
+
+### ルール6: 再帰多角形(Recursive)
+
+**概要:** 多角形の中に小さい多角形を入れ子に配置
+
+**使用パラメータ:**
+- `sides`: 辺の数(3〜6)
+- `depth`: 入れ子の深さ(2〜4)
+- `twist`: 層ごとの回転(0〜25°)
+
+**アルゴリズム:**
+
+```
+for 各深度(0〜depth+2):
+  縮小率 = 1 - 深度 * (0.7 / (depth+1))
+  半径 = 85 * 縮小率
+  回転 = 深度 * (twist * π/180) - π/2
+  
+  頂点配列を生成:
+    for i = 0 to sides:
+      角度 = (i / sides) * 2π + 回転
+      頂点 = (cx + 半径 * cos(角度), cy + 半径 * sin(角度))
+  
+  多角形として描画
+  偶数層のみ塗りつぶし
+```
+
+**視覚的特徴:**
+- フラクタル風の入れ子構造
+- 回転させることで万華鏡的な効果
+- 三角形(3)、四角形(4)、五角形(5)、六角形(6)
+
+---
+
+## HTTP vs HTTPS の視覚的差異
+
+### HTTPS (安全)
+- **彩度:** 通常(45〜75%)
+- **明度:** 通常(55〜70%)
+- **視覚:** カラフル、美しい
+
+### HTTP (非安全)
+- **彩度:** 0% (完全なグレースケール)
+- **明度:** 30% (暗め)
+- **視覚:** モノクロ、退廃的、警告的
+
+**実装:**
+```typescript
+const sat = isSecure ? saturation : 0;
+const light = isSecure ? lightness : 30;
+```
+
+---
+
+## パフォーマンス最適化
+
+### useMemo の使用
+
+```typescript
+const params = useMemo(() => (bytes ? extractParams(bytes) : null), [bytes]);
+const palette = useMemo(() => (params ? buildPalette(params, isSecure) : []), [params, isSecure]);
+```
+
+**理由:**
+- `extractParams`は計算コストが高い
+- `buildPalette`も配列操作が含まれる
+- `bytes`が変わらない限り再計算しない
+
+---
+
+## 決定論性の保証
+
+同じURLは常に同じビジュアルを生成します。
+
+**保証要素:**
+1. SHA-256ハッシュの決定論性
+2. `Math.sin`, `Math.cos`などの決定論的関数のみ使用
+3. `Math.random()`は一切使用しない
+4. インデックスベースの擬似ランダム性
+
+**例:**
+```typescript
+// ランダムに見えるが決定論的
+const wobble = Math.sin(angle * 2.5 + index) * wobbleStrength * 0.5
+```
+
+---
+
+## 拡張性
+
+バイト27〜31は未使用です。将来的に以下の追加が可能:
+- アニメーション速度
+- グラデーション方向
+- 影の有無
+- テクスチャパターン
+- 新しい生成ルール
+
+---
+
+## まとめ
+
+このシステムは:
+- ✅ 完全に決定論的
+- ✅ URLごとにユニーク
+- ✅ 7種類の多様なパターン
+- ✅ HTTP/HTTPS を視覚的に区別
+- ✅ 数学的に美しい
+- ✅ パフォーマンス最適化済み
+
+各URLが持つ「個性」を視覚化します。
