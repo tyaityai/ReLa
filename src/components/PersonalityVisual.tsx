@@ -52,7 +52,7 @@ function extractParams(bytes: Uint8Array) {
 
     // ── 共通 ──
     opacity: (bytes[24] / 255) * 0.35 + 0.55, // 0.55〜0.90
-    strokeW: (bytes[25] / 255) * 1.2 + 0.4, // 0.4〜1.6
+    strokeW: (bytes[25] / 255) * 0.3 + 0.3, // 0.3〜0.6
     fillMix: bytes[26] % 2 === 0,
   };
 }
@@ -276,7 +276,7 @@ function BubbleRule({ p, palette }: RuleProps) {
             cy={cy}
             r={r}
             fill={color.fill}
-            fillOpacity={opacity - 0.1}
+            fillOpacity={opacity+0.1}
             stroke={color.stroke}
             strokeWidth={strokeW}
           />
@@ -351,7 +351,7 @@ function TileRule({ p, palette }: RuleProps) {
                   }
                   fill="none"
                   stroke={color.fill}
-                  strokeWidth={strokeW * 2}
+                  strokeWidth={strokeW * 7}
                   strokeLinecap="round"
                   opacity={opacity}
                 />

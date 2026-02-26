@@ -57,12 +57,14 @@ function MainPage() {
         <div className='flex w-full justify-center'>
         <div className="grid grid-cols-1 w-full space-y-4 mt-20 mb-20 place-content-center">
             {bookmarks.length === 0 ? (
-                <p className="text-gray-500">まだブックマークがありません</p>
+                <div>
+                <p className="text-gray-500 text-xl md:text-2xl font-medium justify-self-center">すっからかん。</p>
+                </div>
             ) : (
             bookmarks.map(bookmark => (
                 <div 
                     key={bookmark.id} 
-                    className="grid grid-cols-[75%_20%_5%] items-center justify-stretch relative min-h-30 w-[80%] md:w-[68%] mx-auto rounded-lg p-4 shadow-md hover:shadow-lg transition"
+                    className="animate-fadeInUp grid grid-cols-[75%_20%_5%] justify-stretch relative min-h-30 w-[80%] md:w-[68%] mx-auto rounded-lg py-4 pl-4 pr-2 shadow-md hover:shadow-lg transition"
                     style={{boxShadow:  "10px 10px 16px #adb1b7 -10px -10px 16px #f5f9ff"}}
                 >
                     <div>
@@ -80,7 +82,7 @@ function MainPage() {
                             {bookmark.tags.map((tag, index) => (
                             <span 
                                 key={index}
-                                className="px-2 py-1 bg-gray-200 rounded text-sm font-medium"
+                                className="px-2 py-1 bg-gray-200 rounded-lg text-sm font-medium"
                             >
                                 {tag}
                             </span>
@@ -91,28 +93,28 @@ function MainPage() {
                         <p className="text-gray-600 text-xs mt-2">{bookmark.memo}</p>
                     )}
                     </div>
-                    <div className='place-items-center max-w-100'>
-                        <PersonalityVisual url={bookmark.url} size={100}/>
+                    <div className='place-items-center self-center max-w-100'>
+                        <PersonalityVisual url={bookmark.url} size={100} />
                     </div>
-                    <div>
-                                            <button
-                        onClick={() => {
-                            setEditingBookmark(bookmark);
-                            setIsModalOpen(true);
-                        }}
-                        className="absolute top-9 right-2 w-8 h-8 flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-800 transition"
-                    >
-                    <span className="material-symbols-rounded"
-                        style={{fontSize:"1.2em"}}
-                    >edit</span>
-                    </button>
+                    <div className='flex flex-col text-right'>
                     <button
                         onClick={() => handleDelete(bookmark.id)}
-                        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center cursor-pointer text-red-400 hover:text-red-500 transition"
+                        className="w-8 h-8 flex justify-center cursor-pointer text-red-400 hover:text-red-500 transition"
                     >
                         <span className="material-symbols-rounded" 
                         style={{fontSize:"1.2em"}}
                         >delete</span>                    
+                    </button>
+                    <button
+                        onClick={() => {
+                            setEditingBookmark(bookmark);
+                            setIsModalOpen(true);
+                        }}
+                        className="w-8 h-8 flex justify-center text-gray-500 cursor-pointer hover:text-gray-800 transition"
+                    >
+                    <span className="material-symbols-rounded"
+                        style={{fontSize:"1.2em"}}
+                    >edit</span>
                     </button>
                     </div>
                 </div>
