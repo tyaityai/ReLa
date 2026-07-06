@@ -64,8 +64,9 @@ function MainPage() {
             bookmarks.map(bookmark => (
                 <div 
                     key={bookmark.id} 
-                    className="animate-fadeInUp grid grid-cols-[75%_20%_5%] justify-stretch relative min-h-30 w-[80%] md:w-[68%] mx-auto rounded-lg py-4 pl-4 pr-2 shadow-md hover:shadow-lg transition"
-                    style={{boxShadow:  "10px 10px 16px #adb1b7 -10px -10px 16px #f5f9ff"}}
+                    className="animate-fadeInUp grid grid-cols-[1fr_100px_50px] justify-stretch relative min-h-20 w-[80%] md:w-[68%] mx-auto rounded-lg py-4 pl-4 pr-2 shadow-md transition items-center"
+                    style={{boxShadow: "8px 8px 16px rgba(174,174,192,0.4), -8px -8px 16px rgba(244,244,244,0.4)",
+}}
                 >
                     <div>
                     <h3 className="text-lg md:text-xl font-bold mb-2">{bookmark.title}</h3>
@@ -73,7 +74,7 @@ function MainPage() {
                         href={bookmark.url} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-sm md:text-base text-blue-400 truncate hover:underline block mb-2 wrap-break-word"
+                        className="text-sm md:text-base text-blue-400 hover:underline block mb-2 wrap-break-word break-all"
                     >
                         {bookmark.url}
                     </a>
@@ -82,7 +83,7 @@ function MainPage() {
                             {bookmark.tags.map((tag, index) => (
                             <span 
                                 key={index}
-                                className="px-2 py-1 bg-gray-200 rounded-lg text-sm font-medium"
+                                className="px-2 py-1 bg-gray-200 rounded-lg text-sm font-medium whitespace-nowrap"
                             >
                                 {tag}
                             </span>
@@ -93,10 +94,10 @@ function MainPage() {
                         <p className="text-gray-600 text-xs mt-2">{bookmark.memo}</p>
                     )}
                     </div>
-                    <div className='place-items-center self-center max-w-100'>
-                        <PersonalityVisual url={bookmark.url} size={100} />
+                    <div className='flex justify-center items-center h-full'>
+                        <PersonalityVisual url={bookmark.url} />
                     </div>
-                    <div className='flex flex-col text-right'>
+                    <div className='flex flex-col justify-center gap-2 items-center self-center h-[80%]'>
                     <button
                         onClick={() => handleDelete(bookmark.id)}
                         className="w-8 h-8 flex justify-center cursor-pointer text-red-400 hover:text-red-500 transition"

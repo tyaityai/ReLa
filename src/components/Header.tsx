@@ -3,7 +3,7 @@ import logoImage from '../assets/ReLa.svg';
 
 function Header() {
     return (
-        <header className="fixed flex top-4 z-50 w-[90%] items-center justify-between">
+        <header className="fixed flex top-0 pt-4 z-50 w-full px-12 bg-white/20 backdrop-blur-xs border-white/30 items-center justify-between">
             
             {/* logo */}
             <div className="relative w-24 h-16 drop-shadow-lg/15">

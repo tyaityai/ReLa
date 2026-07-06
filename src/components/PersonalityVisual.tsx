@@ -464,10 +464,8 @@ function PersonalityVisual({ url, size = 100 }: PersonalityVisualProps) {
   return (
     <svg
       viewBox="0 0 200 200"
-      width={size}
-      height={size}
       xmlns="http://www.w3.org/2000/svg"
-      style={{ background: bg, borderRadius: '8px', display: 'block' }}
+      style={{ background: bg, borderRadius: '8px', display: 'block', width:'60%', height: 'auto' }}
     >
       <RuleComp p={params} palette={palette} />
     </svg>
